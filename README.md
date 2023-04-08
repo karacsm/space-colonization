@@ -10,3 +10,6 @@ C++ header only implementation of the space colonization algorithm described in 
 ## How to use
 
 Just include spacecol.hpp in your project (for an example see example.cpp).
+
+## Animation
+https://user-images.githubusercontent.com/47685770/230717469-2f825d01-e2dd-436a-a128-7784a7ac1932.mp4
