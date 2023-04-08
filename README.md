@@ -5,3 +5,8 @@ Space colonization algorithm implemented in C++.
 </p>
 
 C++ header only implementation of the space colonization algorithm described in [http://algorithmicbotany.org/papers/colonization.egwnp2007.pdf](http://algorithmicbotany.org/papers/colonization.egwnp2007.pdf). The [nanoflann](https://github.com/jlblancoc/nanoflann) KD-tree implementation is used for fast nearest neighbor searches.
+
+
+## How to use
+
+Just include spacecol.hpp in your project (for an example see example.cpp).
