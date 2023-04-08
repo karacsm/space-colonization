@@ -4,6 +4,8 @@
 #include <list>
 #include <fstream>
 #include <string>
+#include <unordered_set>
+#include "nanoflann.hpp"
 
 template<typename T, int K>
 using point_t = std::array<T, K>;

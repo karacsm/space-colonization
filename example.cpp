@@ -1,11 +1,5 @@
 #include <iostream>
-#include <vector>
-#include <random>
-#include <array>
-#include <list>
-#include <unordered_set>
 
-#include "nanoflann.hpp"
 #include "spacecol.hpp"
 
 int main() {
