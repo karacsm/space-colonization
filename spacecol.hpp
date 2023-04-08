@@ -147,9 +147,8 @@ std::array<T, K> axpy(T a, const std::array<T, K> &x, const std::array<T, K> &y)
 }
 
 //helper functions for void colonize(...)
-template<typename real_t, int K, typename PointDataStructure, typename kd_cloud_tree_t, typename kd_graph_tree_t>
+template<typename real_t, int K, typename PointDataStructure, typename kd_graph_tree_t>
 std::vector<std::list<int>> prune_attraction_points(PointDataStructure &attraction_points,
-                                                    kd_cloud_tree_t &attraction_point_index,
                                                     std::unordered_set<int> &active_attractors,
                                                     const kd_graph_tree_t &tree_node_index,
                                                     real_t kill_distance, real_t influence_radius, int node_count) {
@@ -165,7 +164,6 @@ std::vector<std::list<int>> prune_attraction_points(PointDataStructure &attracti
     }
     for (const int& i : to_remove) {
         active_attractors.erase(i);
-        attraction_point_index.removePoint(i);
     }
     return node_attractors;
 }
@@ -192,19 +190,16 @@ void colonize(PointGraph<real_t, K> &tree_nodes /*in out, with root nodes added*
               real_t step_size, real_t kill_distance, real_t influence_radius,
               int snapshot_every, const std::string &snapfn, int maxiter, int children_limit = 2) {
     
-    using kd_cloud_tree_t = nanoflann::KDTreeSingleIndexDynamicAdaptor<nanoflann::L2_Simple_Adaptor<real_t, PointCloud<real_t, K>>, PointCloud<real_t, K>, K>;
     using kd_graph_tree_t = nanoflann::KDTreeSingleIndexDynamicAdaptor<nanoflann::L2_Simple_Adaptor<real_t, PointGraph<real_t, K>>, PointGraph<real_t, K>, K>;
 
     std::unordered_set<int> active_attractors;
     for (int i = 0; i < attraction_points.kdtree_get_point_count(); i++) active_attractors.insert(i);
 
-    kd_cloud_tree_t attraction_point_index(K, attraction_points, {10});
     kd_graph_tree_t tree_node_index(K, tree_nodes, {10});
 
     //remove attraction points close to root nodes and find node attractors
-    std::vector<std::list<int>> node_attractors = prune_attraction_points<real_t, K, PointCloud<real_t, K>, kd_cloud_tree_t, kd_graph_tree_t>(
+    std::vector<std::list<int>> node_attractors = prune_attraction_points<real_t, K, PointCloud<real_t, K>, kd_graph_tree_t>(
                                                                                         attraction_points,
-                                                                                        attraction_point_index,
                                                                                         active_attractors,
                                                                                         tree_node_index,
                                                                                         kill_distance, influence_radius, tree_nodes.kdtree_get_point_count());
@@ -225,9 +220,8 @@ void colonize(PointGraph<real_t, K> &tree_nodes /*in out, with root nodes added*
         }
         if (!any_new_nodes) break;
         //remove attraction points close to root nodes and find node attractors
-        node_attractors = prune_attraction_points<real_t, K, PointCloud<real_t, K>, kd_cloud_tree_t, kd_graph_tree_t>(
+        node_attractors = prune_attraction_points<real_t, K, PointCloud<real_t, K>, kd_graph_tree_t>(
                                                                                         attraction_points,
-                                                                                        attraction_point_index,
                                                                                         active_attractors,
                                                                                         tree_node_index,
                                                                                         kill_distance, influence_radius, tree_nodes.kdtree_get_point_count());
